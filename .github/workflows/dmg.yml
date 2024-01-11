@@ -1,0 +1,29 @@
+name: Build DMG
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      run: |
+        pip install py2app pynput pytesseract pyperclip pillow
+
+    - name: Build DMG
+      run: |
+        python setup.py py2app
+        hdiutil create dist/stealit.dmg -srcfolder dist/stealit.app -ov
